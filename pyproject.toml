@@ -1,0 +1,24 @@
+[project]
+name = "perkinelmer_envision_sila"
+version = "0.1.0"
+description = "SiLA 2 server and drivers for the PerkinElmer EnVision Plate Reader"
+requires-python = ">=3.8"
+dependencies = [
+    "sila2",
+    "typer",
+    "requests"
+]
+
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["envision_sila*"]
+
+[tool.setuptools.package-data]
+"envision_sila.generated" = [
+    "*/*.sila.xml",
+    "*/*.proto",
+]
+"envision_sila" = ["py.typed"]

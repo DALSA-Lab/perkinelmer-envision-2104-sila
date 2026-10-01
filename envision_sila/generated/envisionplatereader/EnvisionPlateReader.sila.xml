@@ -1,0 +1,259 @@
+<Feature xmlns="http://www.sila-standard.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Category="instruments" FeatureVersion="2.0" MaturityLevel="Verified" Originator="com.my.company.robotics" SiLA2Version="1.0" xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>EnvisionPlateReader</Identifier>
+  <DisplayName>Envision Plate Reader Controller</DisplayName>
+  <Description>Provides remote control of a PerkinElmer Envision Plate Reader.</Description>
+  <!-- Commands are unchanged -->
+  <Command>
+    <Identifier>RunDefaultAssay</Identifier>
+    <DisplayName>Run Default Assay</DisplayName>
+    <Description>Initiates the default protocol. Requires a subsequent LoadPlate command.</Description>
+    <Observable>Yes</Observable>
+    <Response>
+      <Identifier>AssayID</Identifier>
+      <DisplayName>Assay ID</DisplayName>
+      <Description>The ID for the initiated assay.</Description>
+      <DataType>
+        <Basic>Integer</Basic>
+      </DataType>
+    </Response>
+  </Command>
+  <Command>
+    <Identifier>RunAssayByIndex</Identifier>
+    <DisplayName>Run Assay By Index</DisplayName>
+    <Description>Initiates a protocol by its index. Requires a subsequent LoadPlate command.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>ProtocolIndex</Identifier>
+      <DisplayName>Protocol Index</DisplayName>
+      <Description>The 0-based index of the protocol.</Description>
+      <DataType>
+        <Basic>Integer</Basic>
+      </DataType>
+    </Parameter>
+    <Response>
+      <Identifier>AssayID</Identifier>
+      <DisplayName>Assay ID</DisplayName>
+      <Description>The ID for the initiated assay.</Description>
+      <DataType>
+        <Basic>Integer</Basic>
+      </DataType>
+    </Response>
+  </Command>
+  <Command>
+    <Identifier>LoadPlate</Identifier>
+    <DisplayName>Load Plate</DisplayName>
+    <Description>Loads a plate and starts measurement if an assay is prepared. Waits for completion.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Barcode</Identifier>
+      <DisplayName>Barcode</DisplayName>
+      <Description>Optional plate barcode.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>UnloadPlate</Identifier>
+    <DisplayName>Unload Plate</DisplayName>
+    <Description>Unloads a plate from the instrument. Waits for completion.</Description>
+    <Observable>Yes</Observable>
+  </Command>
+  <Command>
+    <Identifier>SaveResults</Identifier>
+    <DisplayName>Save Results</DisplayName>
+    <Description>Saves plate results for a given Assay ID.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>AssayID</Identifier>
+      <DisplayName>Assay ID</DisplayName>
+      <Description>The ID of the assay to save.</Description>
+      <DataType>
+        <Basic>Integer</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>FileName</Identifier>
+      <DisplayName>File Name</DisplayName>
+      <Description>Optional filename.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+    <Response>
+      <Identifier>StatusMessage</Identifier>
+      <DisplayName>Status Message</DisplayName>
+      <Description>A confirmation message.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Response>
+  </Command>
+  <Command>
+    <Identifier>SetDefaultProtocol</Identifier>
+    <DisplayName>Set Default Protocol</DisplayName>
+    <Description>Sets the default protocol by its index.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>ProtocolIndex</Identifier>
+      <DisplayName>Protocol Index</DisplayName>
+      <Description>The 0-based index of the protocol.</Description>
+      <DataType>
+        <Basic>Integer</Basic>
+      </DataType>
+    </Parameter>
+    <Response>
+      <Identifier>StatusMessage</Identifier>
+      <DisplayName>Status Message</DisplayName>
+      <Description>A confirmation message.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Response>
+  </Command>
+  <!-- Properties -->
+  <Property>
+    <Identifier>CurrentState</Identifier>
+    <DisplayName>Current State</DisplayName>
+    <Description>The current operational state of the instrument.</Description>
+    <Observable>Yes</Observable>
+    <DataType>
+      <DataTypeIdentifier>StateType</DataTypeIdentifier>
+    </DataType>
+  </Property>
+  <Property>
+    <Identifier>ValidProtocols</Identifier>
+    <DisplayName>Valid Protocols</DisplayName>
+    <Description>A list of all protocols ready to be run, including their index for selection.</Description>
+    <Observable>No</Observable>
+    <DataType>
+      <List>
+        <DataType>
+          <DataTypeIdentifier>ProtocolInfo</DataTypeIdentifier>
+        </DataType>
+      </List>
+    </DataType>
+  </Property>
+  <Property>
+    <Identifier>InstrumentDetails</Identifier>
+    <DisplayName>Instrument Details</DisplayName>
+    <Description>A collection of detailed properties and states of the instrument.</Description>
+    <Observable>Yes</Observable>
+    <DataType>
+      <DataTypeIdentifier>InstrumentDetailsType</DataTypeIdentifier>
+    </DataType>
+  </Property>
+  <!-- =========================== CORRECTED DATA TYPE DEFINITIONS =========================== -->
+  <DataTypeDefinition>
+    <Identifier>StateType</Identifier>
+    <DisplayName>State Type</DisplayName>
+    <Description>Holds the instrument's state code and description.</Description>
+    <DataType>
+      <Structure>
+        <Element>
+          <Identifier>StatusCode</Identifier>
+          <DisplayName>Status Code</DisplayName>
+          <Description>Numerical state code.</Description>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+        </Element>
+        <Element>
+          <Identifier>StatusDescription</Identifier>
+          <DisplayName>Status Description</DisplayName>
+          <Description>Human-readable state.</Description>
+          <DataType>
+            <Basic>String</Basic>
+          </DataType>
+        </Element>
+      </Structure>
+    </DataType>
+  </DataTypeDefinition>
+  <DataTypeDefinition>
+    <Identifier>ProtocolInfo</Identifier>
+    <DisplayName>Protocol Info</DisplayName>
+    <Description>Holds the details of a protocol, including its selection index.</Description>
+    <DataType>
+      <Structure>
+        <Element>
+          <Identifier>Index</Identifier>
+          <DisplayName>Index</DisplayName>
+          <Description>The 0-based index for use in commands.</Description>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+        </Element>
+        <Element>
+          <Identifier>Name</Identifier>
+          <DisplayName>Name</DisplayName>
+          <Description>The name of the protocol.</Description>
+          <DataType>
+            <Basic>String</Basic>
+          </DataType>
+        </Element>
+        <Element>
+          <Identifier>ProtocolID</Identifier>
+          <DisplayName>Protocol ID</DisplayName>
+          <Description>The unique ID of the protocol.</Description>
+          <DataType>
+            <Basic>String</Basic>
+          </DataType>
+        </Element>
+        <Element>
+          <Identifier>Version</Identifier>
+          <DisplayName>Version</DisplayName>
+          <Description>The version of the protocol.</Description>
+          <DataType>
+            <Basic>String</Basic>
+          </DataType>
+        </Element>
+      </Structure>
+    </DataType>
+  </DataTypeDefinition>
+  <DataTypeDefinition>
+    <Identifier>InstrumentDetailsType</Identifier>
+    <DisplayName>Instrument Details Type</DisplayName>
+    <Description>Holds detailed properties and decoded states of the instrument.</Description>
+    <DataType>
+      <Structure>
+        <Element>
+          <Identifier>PropertiesJSON</Identifier>
+          <DisplayName>Properties (JSON)</DisplayName>
+          <Description>A JSON string of all instrument properties.</Description>
+          <DataType>
+            <Basic>String</Basic>
+          </DataType>
+        </Element>
+        <Element>
+          <Identifier>DecodedState</Identifier>
+          <DisplayName>Decoded State</DisplayName>
+          <Description>A list of active states from the state bitmask.</Description>
+          <DataType>
+            <List>
+              <DataType>
+                <Basic>String</Basic>
+              </DataType>
+            </List>
+          </DataType>
+        </Element>
+        <Element>
+          <Identifier>DecodedConfiguration</Identifier>
+          <DisplayName>Decoded Configuration</DisplayName>
+          <Description>A list of active options from the configuration bitmask.</Description>
+          <DataType>
+            <List>
+              <DataType>
+                <Basic>String</Basic>
+              </DataType>
+            </List>
+          </DataType>
+        </Element>
+      </Structure>
+    </DataType>
+  </DataTypeDefinition>
+  <DefinedExecutionError>
+    <Identifier>OperationFailed</Identifier>
+    <DisplayName>Operation Failed</DisplayName>
+    <Description>Indicates that a command or property request failed to execute correctly.</Description>
+  </DefinedExecutionError>
+</Feature>

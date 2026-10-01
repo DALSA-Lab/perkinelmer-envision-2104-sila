@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+import "SiLAFramework.proto";
+
+package sila2.com.my.company.robotics.instruments.envisionplatereader.v2;
+
+/* Provides remote control of a PerkinElmer Envision Plate Reader. */
+service EnvisionPlateReader {
+  /* Initiates the default protocol. Requires a subsequent LoadPlate command. */
+  rpc RunDefaultAssay (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.RunDefaultAssay_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of RunDefaultAssay */
+  rpc RunDefaultAssay_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of RunDefaultAssay */
+  rpc RunDefaultAssay_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.RunDefaultAssay_Responses) {}
+  /* Initiates a protocol by its index. Requires a subsequent LoadPlate command. */
+  rpc RunAssayByIndex (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.RunAssayByIndex_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of RunAssayByIndex */
+  rpc RunAssayByIndex_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of RunAssayByIndex */
+  rpc RunAssayByIndex_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.RunAssayByIndex_Responses) {}
+  /* Loads a plate and starts measurement if an assay is prepared. Waits for completion. */
+  rpc LoadPlate (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.LoadPlate_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of LoadPlate */
+  rpc LoadPlate_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of LoadPlate */
+  rpc LoadPlate_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.LoadPlate_Responses) {}
+  /* Unloads a plate from the instrument. Waits for completion. */
+  rpc UnloadPlate (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.UnloadPlate_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of UnloadPlate */
+  rpc UnloadPlate_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of UnloadPlate */
+  rpc UnloadPlate_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.UnloadPlate_Responses) {}
+  /* Saves plate results for a given Assay ID. */
+  rpc SaveResults (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.SaveResults_Parameters) returns (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.SaveResults_Responses) {}
+  /* Sets the default protocol by its index. */
+  rpc SetDefaultProtocol (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.SetDefaultProtocol_Parameters) returns (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.SetDefaultProtocol_Responses) {}
+  /* The current operational state of the instrument. */
+  rpc Subscribe_CurrentState (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.Subscribe_CurrentState_Parameters) returns (stream sila2.com.my.company.robotics.instruments.envisionplatereader.v2.Subscribe_CurrentState_Responses) {}
+  /* A list of all protocols ready to be run, including their index for selection. */
+  rpc Get_ValidProtocols (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.Get_ValidProtocols_Parameters) returns (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.Get_ValidProtocols_Responses) {}
+  /* A collection of detailed properties and states of the instrument. */
+  rpc Subscribe_InstrumentDetails (sila2.com.my.company.robotics.instruments.envisionplatereader.v2.Subscribe_InstrumentDetails_Parameters) returns (stream sila2.com.my.company.robotics.instruments.envisionplatereader.v2.Subscribe_InstrumentDetails_Responses) {}
+}
+
+/* Holds the instrument's state code and description. */
+message DataType_StateType {
+  message StateType_Struct {
+    sila2.org.silastandard.Integer StatusCode = 1;  /* Numerical state code. */
+    sila2.org.silastandard.String StatusDescription = 2;  /* Human-readable state. */
+  }
+  sila2.com.my.company.robotics.instruments.envisionplatereader.v2.DataType_StateType.StateType_Struct StateType = 1;  /* Holds the instrument's state code and description. */
+}
+
+/* Holds the details of a protocol, including its selection index. */
+message DataType_ProtocolInfo {
+  message ProtocolInfo_Struct {
+    sila2.org.silastandard.Integer Index = 1;  /* The 0-based index for use in commands. */
+    sila2.org.silastandard.String Name = 2;  /* The name of the protocol. */
+    sila2.org.silastandard.String ProtocolID = 3;  /* The unique ID of the protocol. */
+    sila2.org.silastandard.String Version = 4;  /* The version of the protocol. */
+  }
+  sila2.com.my.company.robotics.instruments.envisionplatereader.v2.DataType_ProtocolInfo.ProtocolInfo_Struct ProtocolInfo = 1;  /* Holds the details of a protocol, including its selection index. */
+}
+
+/* Holds detailed properties and decoded states of the instrument. */
+message DataType_InstrumentDetailsType {
+  message InstrumentDetailsType_Struct {
+    sila2.org.silastandard.String PropertiesJSON = 1;  /* A JSON string of all instrument properties. */
+    repeated sila2.org.silastandard.String DecodedState = 2;  /* A list of active states from the state bitmask. */
+    repeated sila2.org.silastandard.String DecodedConfiguration = 3;  /* A list of active options from the configuration bitmask. */
+  }
+  sila2.com.my.company.robotics.instruments.envisionplatereader.v2.DataType_InstrumentDetailsType.InstrumentDetailsType_Struct InstrumentDetailsType = 1;  /* Holds detailed properties and decoded states of the instrument. */
+}
+
+/* Parameters for RunDefaultAssay */
+message RunDefaultAssay_Parameters {
+}
+
+/* Responses of RunDefaultAssay */
+message RunDefaultAssay_Responses {
+  sila2.org.silastandard.Integer AssayID = 1;  /* The ID for the initiated assay. */
+}
+
+/* Parameters for RunAssayByIndex */
+message RunAssayByIndex_Parameters {
+  sila2.org.silastandard.Integer ProtocolIndex = 1;  /* The 0-based index of the protocol. */
+}
+
+/* Responses of RunAssayByIndex */
+message RunAssayByIndex_Responses {
+  sila2.org.silastandard.Integer AssayID = 1;  /* The ID for the initiated assay. */
+}
+
+/* Parameters for LoadPlate */
+message LoadPlate_Parameters {
+  sila2.org.silastandard.String Barcode = 1;  /* Optional plate barcode. */
+}
+
+/* Responses of LoadPlate */
+message LoadPlate_Responses {
+}
+
+/* Parameters for UnloadPlate */
+message UnloadPlate_Parameters {
+}
+
+/* Responses of UnloadPlate */
+message UnloadPlate_Responses {
+}
+
+/* Parameters for SaveResults */
+message SaveResults_Parameters {
+  sila2.org.silastandard.Integer AssayID = 1;  /* The ID of the assay to save. */
+  sila2.org.silastandard.String FileName = 2;  /* Optional filename. */
+}
+
+/* Responses of SaveResults */
+message SaveResults_Responses {
+  sila2.org.silastandard.String StatusMessage = 1;  /* A confirmation message. */
+}
+
+/* Parameters for SetDefaultProtocol */
+message SetDefaultProtocol_Parameters {
+  sila2.org.silastandard.Integer ProtocolIndex = 1;  /* The 0-based index of the protocol. */
+}
+
+/* Responses of SetDefaultProtocol */
+message SetDefaultProtocol_Responses {
+  sila2.org.silastandard.String StatusMessage = 1;  /* A confirmation message. */
+}
+
+/* Parameters for CurrentState */
+message Subscribe_CurrentState_Parameters {
+}
+
+/* Responses of CurrentState */
+message Subscribe_CurrentState_Responses {
+  sila2.com.my.company.robotics.instruments.envisionplatereader.v2.DataType_StateType CurrentState = 1;  /* The current operational state of the instrument. */
+}
+
+/* Parameters for ValidProtocols */
+message Get_ValidProtocols_Parameters {
+}
+
+/* Responses of ValidProtocols */
+message Get_ValidProtocols_Responses {
+  repeated sila2.com.my.company.robotics.instruments.envisionplatereader.v2.DataType_ProtocolInfo ValidProtocols = 1;  /* A list of all protocols ready to be run, including their index for selection. */
+}
+
+/* Parameters for InstrumentDetails */
+message Subscribe_InstrumentDetails_Parameters {
+}
+
+/* Responses of InstrumentDetails */
+message Subscribe_InstrumentDetails_Responses {
+  sila2.com.my.company.robotics.instruments.envisionplatereader.v2.DataType_InstrumentDetailsType InstrumentDetails = 1;  /* A collection of detailed properties and states of the instrument. */
+}
